@@ -4,21 +4,31 @@ import std::core;
 import raylib6;
 
 fn RLShader load_shader(ZString vs_file, ZString fs_file) {
-    ZString vs_code = rl::load_file_text(vs_file);
-    ZString fs_code = rl::load_file_text(fs_file);
-    defer free(vs_code);
-    defer free(fs_code);
+	ZString vs_code = vs_file ? rl::load_file_text(vs_file) : null;
+	ZString fs_code = fs_file ? rl::load_file_text(fs_file) : null;
+	defer free(vs_code);
+	defer free(fs_code);
 
+	return load_shader_from_memory(vs_code, fs_code);
+}
+
+fn RLShader load_shader_from_memory(ZString vs_code, ZString fs_code) {
 	@pool() {
 		DString vs_final = dstring::temp();
-		vs_final.append(SHADER_HEADER_VERT);
-		vs_final.append(vs_code.str_view());
+		if (vs_code) {
+			vs_final.append(SHADER_HEADER_VERT);
+			vs_final.append(vs_code.str_view());
+		}
 
 		DString fs_final = dstring::temp();
-		fs_final.append(SHADER_HEADER_FRAG);
-		fs_final.append(fs_code.str_view());
+		if (fs_code) {
+			fs_final.append(SHADER_HEADER_FRAG);
+			fs_final.append(fs_code.str_view());
+		}
 
-		return rl::load_shader_from_memory(vs_final.zstr_view(), fs_final.zstr_view());
+		return rl::load_shader_from_memory(
+			vs_code ? vs_final.zstr_view() : null,
+			fs_code ? fs_final.zstr_view() : null);
 	};
 }
 
@@ -40,7 +50,7 @@ fn RLShader load_shader(ZString vs_file, ZString fs_file) {
 //   remap(v,a,b,c,d)        - remap v from [a,b] to [c,d]
 //
 // Constants
-//   PI, TWO_PI, HALF_PI, INV_PI, SQRT2, E
+//   PI, TWO_PI, HALF_PI, INV_PI, SQRT2
 
 const String SHADER_HELPERS @local = `
 #define saturate(x) clamp((x), 0.0, 1.0)
@@ -50,7 +60,6 @@ const String SHADER_HELPERS @local = `
 #define HALF_PI 1.57079632679489661923
 #define INV_PI 0.31830988618379067154
 #define SQRT2 1.41421356237309504880
-#define E 2.71828182845904523536
 `;
 
 const String SHADER_HEADER_VERT @local @if(env::WASM) = `#version 100
