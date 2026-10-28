@@ -10,13 +10,14 @@ attrdef @RLPExport(name) = @cname("rlp_" +++ name), @export;
 
 struct RLPApp
 {
-	String        title;
-	RLConfigFlag  flags;
-	int           window_w;
-	int           window_h;
-	int           target_fps;
-	RLKeyboardKey exit_key;
-	bool          audio_device;
+	String          title;
+	RLConfigFlag    flags;
+	int             window_w;
+	int             window_h;
+	int             target_fps;
+	RLKeyboardKey   exit_key;
+	RLTraceLogLevel log_level;
+	bool            audio_device;
 }
 
 extern const RLPApp APP @cname("rlp_app");
@@ -65,6 +66,8 @@ fn void main_init(String[] args) @local
 	$else
 		rl::set_config_flags(APP.flags);
 	$endif
+
+	rl::set_trace_log_level(APP.log_level);
 
 	rl::init_window(APP.window_w, APP.window_h, APP.title.zstr_tcopy());
 	if (APP.audio_device) rl::init_audio_device();
