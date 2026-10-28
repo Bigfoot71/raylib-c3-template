@@ -24,8 +24,5 @@ fn void quit() @RLPExport("quit")
 
 fn void tick(float dt) @RLPExport("tick")
 {
-	rl::@drawing()
-	{
-		rl::clear_background(rl::DARKGRAY);
-	};
+	rl::clear_background(rl::DARKGRAY);
 }

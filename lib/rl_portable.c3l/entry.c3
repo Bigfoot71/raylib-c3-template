@@ -3,7 +3,7 @@ module rlp;
 import raylib6;
 
 // ================================
-// Main Definitions
+// Public: RLP Definitions
 // ================================
 
 attrdef @RLPExport(name) = @cname("rlp_" +++ name), @export;
@@ -21,15 +21,43 @@ struct RLPApp
 
 extern const RLPApp APP @cname("rlp_app");
 
-extern fn void init(String[] args) @cname("rlp_init");
-extern fn void tick(float dt)      @cname("rlp_tick");
-extern fn void quit()              @cname("rlp_quit");
+extern fn void rlp_init(String[] args) @local;
+extern fn void rlp_tick(float dt)      @local;
+extern fn void rlp_quit()              @local;
 
 // ================================
-// Main Function
+// Public: RLP Functions
+// ================================
+
+fn void request_quit()
+{
+	ctx.quit_requested = true;
+}
+
+// ================================
+// Local: Main Functions
 // ================================
 
 fn int main(String[] args) @winmain
+{
+	$if env::WASM:
+	{
+		main_init(args);
+		emscripten_set_main_loop(&main_tick, 0, 1);
+	}
+	$else
+	{
+		main_init(args);
+		defer main_quit();
+		rl::set_target_fps(APP.target_fps);
+		while (!rl::window_should_close() && !ctx.quit_requested) main_tick();
+	}
+	$endif
+
+	return 0;
+}
+
+fn void main_init(String[] args) @local
 {
 	$if env::WASM:
 		const RLConfigFlag WEB_SUPPORTED = VSYNC_HINT | WINDOW_RESIZABLE | WINDOW_TRANSPARENT | MSAA_4X_HINT;
@@ -42,32 +70,52 @@ fn int main(String[] args) @winmain
 	if (APP.audio_device) rl::init_audio_device();
 	rl::set_exit_key(APP.exit_key);
 
-	init(args);
+	rlp_init(args);
+}
+
+fn void main_quit() @local
+{
+	rlp_quit();
+
+	if (rl::is_audio_device_ready())
+	{
+		rl::close_audio_device();
+	}
+	rl::close_window();
+}
+
+fn void main_tick() @local
+{
+	rl::@drawing()
+	{
+		rlp_tick(rl::get_frame_time());
+	};
 
 	$if env::WASM:
-		emscripten_set_main_loop(&internal_tick, 0, 1);
-	$else
-		rl::set_target_fps(APP.target_fps);
-		while (!rl::window_should_close()) internal_tick();
+		if (ctx.quit_requested)
+		{
+			main_quit();
+			emscripten_cancel_main_loop();
+		}
 	$endif
-
-	quit();
-
-	if (APP.audio_device) rl::close_audio_device();
-	rl::close_window();
-
-	return 0;
 }
 
-fn void internal_tick() @local
+// ================================
+// Local: Main Context
+// ================================
+
+struct Context @local
 {
-	tick(rl::get_frame_time());
+	bool quit_requested;
 }
 
+Context ctx @local;
+
 // ================================
-// Emscripten Stuff
+// Local: Emscripten Declarations
 // ================================
 
-alias Em_callback_func = fn void();
+alias Em_callback_func @local = fn void();
 
-extern fn void emscripten_set_main_loop(Em_callback_func func, int fps, int simulate_infinite_loop);
+extern fn void emscripten_set_main_loop(Em_callback_func func, int fps, int simulate_infinite_loop) @local;
+extern fn void emscripten_cancel_main_loop() @local;
