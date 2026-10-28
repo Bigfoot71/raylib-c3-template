@@ -105,8 +105,7 @@
         "-sENVIRONMENT=web",
         "-sUSE_GLFW=3",
         "-O3",
-        "-g0",
-        "-s"
+        "-g0"
       ],
       "debug-info": "none",
       "safe": false,
