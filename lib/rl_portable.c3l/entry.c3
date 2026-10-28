@@ -20,9 +20,10 @@ struct RLPApp
 }
 
 extern const RLPApp APP @cname("rlp_app");
-extern fn void init() @cname("rlp_init");
-extern fn void tick() @cname("rlp_tick");
-extern fn void quit() @cname("rlp_quit");
+
+extern fn void init(String[] args) @cname("rlp_init");
+extern fn void tick(float dt)      @cname("rlp_tick");
+extern fn void quit()              @cname("rlp_quit");
 
 // ================================
 // Main Function
@@ -41,13 +42,13 @@ fn int main(String[] args) @winmain
 	if (APP.audio_device) rl::init_audio_device();
 	rl::set_exit_key(APP.exit_key);
 
-	init();
+	init(args);
 
 	$if env::WASM:
-		emscripten_set_main_loop(&tick, 0, 1);
+		emscripten_set_main_loop(&internal_tick, 0, 1);
 	$else
 		rl::set_target_fps(APP.target_fps);
-		while (!rl::window_should_close()) tick();
+		while (!rl::window_should_close()) internal_tick();
 	$endif
 
 	quit();
@@ -56,6 +57,11 @@ fn int main(String[] args) @winmain
 	rl::close_window();
 
 	return 0;
+}
+
+fn void internal_tick() @local
+{
+	tick(rl::get_frame_time());
 }
 
 // ================================

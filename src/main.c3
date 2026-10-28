@@ -14,7 +14,7 @@ const RLPApp APP @RLPExport("app") =
 	.audio_device = false,
 };
 
-fn void init() @RLPExport("init")
+fn void init(String[] args) @RLPExport("init")
 {
 }
 
@@ -22,10 +22,8 @@ fn void quit() @RLPExport("quit")
 {
 }
 
-fn void tick() @RLPExport("tick")
+fn void tick(float dt) @RLPExport("tick")
 {
-	float dt = rl::get_frame_time();
-
 	rl::@drawing()
 	{
 		rl::clear_background(rl::DARKGRAY);
