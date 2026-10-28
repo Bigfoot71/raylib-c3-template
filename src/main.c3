@@ -10,6 +10,7 @@ const RLPApp APP @RLPExport("app") =
 	.window_w     = 1152,
 	.window_h     = 648,
 	.target_fps   = 60,
+	.exit_key     = NONE,
 	.audio_device = false,
 };
 

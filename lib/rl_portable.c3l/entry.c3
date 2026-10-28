@@ -10,12 +10,13 @@ attrdef @RLPExport(name) = @cname("rlp_" +++ name), @export;
 
 struct RLPApp
 {
-	String title;
-	RLConfigFlag flags;
-	int window_w;
-	int window_h;
-	int target_fps;
-	bool audio_device;
+	String        title;
+	RLConfigFlag  flags;
+	int           window_w;
+	int           window_h;
+	int           target_fps;
+	RLKeyboardKey exit_key;
+	bool          audio_device;
 }
 
 extern const RLPApp APP @cname("rlp_app");
@@ -38,6 +39,7 @@ fn int main(String[] args) @winmain
 
 	rl::init_window(APP.window_w, APP.window_h, APP.title.zstr_tcopy());
 	if (APP.audio_device) rl::init_audio_device();
+	rl::set_exit_key(APP.exit_key);
 
 	init();
 
