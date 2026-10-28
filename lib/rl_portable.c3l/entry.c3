@@ -36,7 +36,7 @@ fn int main(String[] args) @winmain
 		rl::set_config_flags(APP.flags);
 	$endif
 
-	rl::init_window(APP.window_w, APP.window_h, (ZString)APP.title);
+	rl::init_window(APP.window_w, APP.window_h, APP.title.zstr_tcopy());
 	if (APP.audio_device) rl::init_audio_device();
 
 	init();
