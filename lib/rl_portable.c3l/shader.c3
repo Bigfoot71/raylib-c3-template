@@ -6,7 +6,7 @@ import raylib6;
 //
 // I/O
 //   IN, OUT                 - attribute/varying qualifiers
-//   FRAG_COLOR              - fragment shader color output
+//   FRAG_COLOR              - fragment shader color output (loc: 0)
 //
 // Sampling
 //   TEXTURE_2D(s,uv)        - sampler2D
@@ -145,7 +145,7 @@ const String SHADER_HEADER_VERT_GL33 @local = `#version 330
 
 const String SHADER_HEADER_FRAG_GL33 @local = `#version 330
 #define IN in
-out vec4 FRAG_COLOR;
+layout(location = 0) out vec4 FRAG_COLOR;
 #define TEXTURE_2D texture
 #define TEXTURE_CUBE texture
 #define HIGHP
@@ -197,7 +197,7 @@ precision mediump float;
 const String SHADER_HEADER_FRAG_ES30 @local = `#version 300 es
 precision mediump float;
 #define IN in
-out vec4 FRAG_COLOR;
+layout(location = 0) out vec4 FRAG_COLOR;
 #define TEXTURE_2D texture
 #define TEXTURE_CUBE texture
 #define HIGHP highp
