@@ -74,7 +74,7 @@ fn void main_init(String[] args) @local
 	rl::set_exit_key(APP.exit_key);
 
 	$if !env::WASM:
-		rl::change_directory(rl::get_application_directory());
+		main_setup_working_dir();
 	$endif
 
 	rlp_init(args);
@@ -105,6 +105,23 @@ fn void main_tick() @local
 			emscripten_cancel_main_loop();
 		}
 	$endif
+}
+
+fn void main_setup_working_dir() @local @feat(!WASM) => @pool()
+{
+	String app_dir = rl::get_application_directory().str_view();
+	DString prefix = dstring::temp();
+
+	for (int i = 0; i < 4; i++)
+	{
+		String root = string::tformat("%s/%s", app_dir, prefix.str_view());
+		if (rl::directory_exists(string::tformat("%sassets", root).zstr_tcopy()))
+		{
+			rl::change_directory(root.zstr_tcopy());
+			return;
+		}
+		prefix.append("../");
+	}
 }
 
 // ================================
