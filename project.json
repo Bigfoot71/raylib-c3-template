@@ -50,6 +50,37 @@
       "safe": false,
       "opt": "O2"
     },
+    "windows-aarch64-debug": {
+      "name": "MyProject",
+      "type": "executable",
+      "target": "windows-aarch64",
+      "output": "build/windows-aarch64-debug"
+    },
+    "windows-aarch64-release": {
+      "name": "MyProject",
+      "type": "executable",
+      "target": "windows-aarch64",
+      "output": "build/windows-aarch64-release",
+      "link-args": [ "/SUBSYSTEM:WINDOWS" ],
+      "debug-info": "none",
+      "safe": false,
+      "opt": "O2"
+    },
+    "macos-aarch64-debug": {
+      "name": "MyProject",
+      "type": "executable",
+      "target": "macos-aarch64",
+      "output": "build/macos-aarch64-debug"
+    },
+    "macos-aarch64-release": {
+      "name": "MyProject",
+      "type": "executable",
+      "target": "macos-aarch64",
+      "output": "build/macos-aarch64-release",
+      "debug-info": "none",
+      "safe": false,
+      "opt": "O2"
+    },
     "web-debug": {
       "name": "index.html",
       "type": "executable",
