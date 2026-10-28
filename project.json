@@ -45,7 +45,7 @@
       "type": "executable",
       "target": "windows-x64",
       "output": "build/windows-x64-release",
-      "link-args": [ "/OPT:REF" ],
+      "link-args": [ "/SUBSYSTEM:WINDOWS" ],
       "debug-info": "none",
       "safe": false,
       "opt": "O2"
