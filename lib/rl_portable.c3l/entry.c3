@@ -70,6 +70,10 @@ fn void main_init(String[] args) @local
 	if (APP.audio_device) rl::init_audio_device();
 	rl::set_exit_key(APP.exit_key);
 
+	$if !env::WASM:
+		rl::change_directory(rl::get_application_directory());
+	$endif
+
 	rlp_init(args);
 }
 
