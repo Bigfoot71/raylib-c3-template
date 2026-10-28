@@ -109,7 +109,8 @@
         "-s"
       ],
       "debug-info": "none",
-      "safe": false
+      "safe": false,
+      "opt": "O2"
     }
   }
 }
