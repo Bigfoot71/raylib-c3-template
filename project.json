@@ -58,7 +58,6 @@
       "link-args":  [
         "--shell-file src/minshell.html",
         "--preload-file assets@assets",
-        "-sEXPORTED_RUNTIME_METHODS=['HEAPF32']",
         "-sINITIAL_MEMORY=67108864",
         "-sUSE_GLFW=3"
       ]
@@ -71,8 +70,8 @@
       "link-args":  [ 
         "--shell-file src/minshell.html",
         "--preload-file assets@assets",
-        "-sEXPORTED_RUNTIME_METHODS=['HEAPF32']",
         "-sINITIAL_MEMORY=67108864",
+        "-sENVIRONMENT=web",
         "-sUSE_GLFW=3",
         "-O3",
         "-g0",
